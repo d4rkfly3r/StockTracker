@@ -2,132 +2,186 @@ package us.jfreedman.software.stocktracker.stocks;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.time.Instant;
+import java.util.Currency;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Locale;
 
 /**
  * Created by Joshua on 12/12/2015.
  */
 public class Stock implements Serializable {
 
-    private String shortName, fullName;
-    private long amountOfStocks;
-    private float oldValuePerShare;
-    private float newValuePerShare;
-    private float oldValue;
-    private float newValue;
-    private URI website;
-    private StockType stockType;
+    String stockSymbol;
+    long stockAvgDailyVolume;
+    double stockChange;
+    Currency currency = Currency.getInstance(Locale.US);
+    Date lastTradeDate = new Date("12/26/2015");
+    double daysLow, daysHigh, yearsLow, yearsHigh, valuePerShare;
+    long marketCap;
+    String name;
+    String lastTradeTime;
 
-    protected Stock(String shortName, String fullName, int amountOfStocks, float oldValuePerShare, float newValuePerShare, float oldValue, float newValue, URI website, StockType stockType) {
+    LinkedList<Double> pastLows, pastHighs, pastValuesPerShare;
+    LinkedList<Long> pastStockAvgDailyVolume, pastMarketCap;
 
-        this.shortName = shortName;
-        this.fullName = fullName;
-        this.amountOfStocks = amountOfStocks;
-        this.oldValuePerShare = oldValuePerShare;
-        this.newValuePerShare = newValuePerShare;
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-        this.website = website;
-        this.stockType = stockType;
+
+    public Stock() {
+        pastLows = new LinkedList<>();
+        pastHighs = new LinkedList<>();
+        pastValuesPerShare = new LinkedList<>();
+        pastStockAvgDailyVolume = new LinkedList<>();
+        pastMarketCap = new LinkedList<>();
+
+        stockSymbol = name = lastTradeTime = "";
+        stockChange = daysLow = daysHigh = yearsHigh = yearsLow = valuePerShare = marketCap = stockAvgDailyVolume = 0;
     }
 
-    public String getShortName() {
-        return shortName;
+    public Stock migrateAvgDailyVolume(long newValue) {
+        pastStockAvgDailyVolume.push(newValue);
+        setStockAvgDailyVolume(newValue);
+        return this;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public Stock migrateMarketCap(long newValue) {
+        pastMarketCap.push(newValue);
+        setMarketCap(newValue);
+        return this;
     }
 
-    public String getFullName() {
-        return fullName;
+    public Stock migrateDayHigh(double newValue) {
+        pastHighs.push(newValue);
+        setDaysHigh(newValue);
+        return this;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public Stock migrateDayLow(double newValue) {
+        pastLows.push(newValue);
+        setDaysLow(newValue);
+        return this;
     }
 
-    public long getAmountOfStocks() {
-        return amountOfStocks;
+    public Stock migrateValuePerShare(double newValue) {
+        pastValuesPerShare.push(valuePerShare);
+        setValuePerShare(newValue);
+        return this;
     }
 
-    public void setAmountOfStocks(long amountOfStocks) {
-        this.amountOfStocks = amountOfStocks;
+    public String getStockSymbol() {
+        return stockSymbol;
     }
 
-    public double getOldValuePerShare() {
-        return oldValuePerShare;
+    public Stock setStockSymbol(String stockSymbol) {
+        this.stockSymbol = stockSymbol;
+        return this;
     }
 
-    public void setOldValuePerShare(float oldValuePerShare) {
-        this.oldValuePerShare = oldValuePerShare;
+    public long getStockAvgDailyVolume() {
+        return stockAvgDailyVolume;
     }
 
-    public float getNewValuePerShare() {
-        return newValuePerShare;
+    public Stock setStockAvgDailyVolume(long stockAvgDailyVolume) {
+        this.stockAvgDailyVolume = stockAvgDailyVolume;
+        return this;
     }
 
-    public void setNewValuePerShare(float newValuePerShare) {
-        this.newValuePerShare = newValuePerShare;
+    public double getStockChange() {
+        return stockChange;
     }
 
-    public double getOldValue() {
-        return oldValue;
+    public Stock setStockChange(double stockChange) {
+        this.stockChange = stockChange;
+        return this;
     }
 
-    public void setOldValue(float oldValue) {
-        this.oldValue = oldValue;
+    public Currency getCurrency() {
+        return currency;
     }
 
-    public float getNewValue() {
-        return newValue;
+    public Stock setCurrency(Currency currency) {
+        this.currency = currency;
+        return this;
     }
 
-    public void setNewValue(float newValue) {
-        this.newValue = newValue;
+    public Date getLastTradeDate() {
+        return lastTradeDate;
     }
 
-    public URI getWebsite() {
-        return website;
+    public Stock setLastTradeDate(Date lastTradeDate) {
+        this.lastTradeDate = lastTradeDate;
+        return this;
     }
 
-    public void setWebsite(URI website) {
-        this.website = website;
+    public double getDaysLow() {
+        return daysLow;
     }
 
-    public StockType getStockType() {
-        return stockType;
+    public Stock setDaysLow(double daysLow) {
+        this.daysLow = daysLow;
+        return this;
     }
 
-    public void setStockType(StockType stockType) {
-        this.stockType = stockType;
+    public double getDaysHigh() {
+        return daysHigh;
     }
 
-    @Override
-    public String toString() {
-        return "Stock{" +
-                "shortName='" + shortName + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", amountOfStocks=" + amountOfStocks +
-                ", oldValuePerShare=" + oldValuePerShare +
-                ", newValuePerShare=" + newValuePerShare +
-                ", oldValue=" + oldValue +
-                ", newValue=" + newValue +
-                ", website=" + website +
-                ", stockType=" + stockType +
-                '}';
+    public Stock setDaysHigh(double daysHigh) {
+        this.daysHigh = daysHigh;
+        return this;
     }
 
-    public void migrateNewValue(float nValue) {
-        setOldValue(getNewValue());
-        setNewValue(nValue);
+    public double getYearsLow() {
+        return yearsLow;
     }
 
-    public void migrateNewValuePerShare(float nValue) {
-        setOldValuePerShare(getNewValuePerShare());
-        setNewValuePerShare(nValue);
+    public Stock setYearsLow(double yearsLow) {
+        this.yearsLow = yearsLow;
+        return this;
     }
 
-    public void updateAmountOfStocks() {
-        setAmountOfStocks(((long) getNewValue()) / ((long) getNewValuePerShare()));
+    public double getYearsHigh() {
+        return yearsHigh;
+    }
+
+    public Stock setYearsHigh(double yearsHigh) {
+        this.yearsHigh = yearsHigh;
+        return this;
+    }
+
+    public double getValuePerShare() {
+        return valuePerShare;
+    }
+
+    public Stock setValuePerShare(double valuePerShare) {
+        this.valuePerShare = valuePerShare;
+        return this;
+    }
+
+    public long getMarketCap() {
+        return marketCap;
+    }
+
+    public Stock setMarketCap(long marketCap) {
+        this.marketCap = marketCap;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Stock setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getLastTradeTime() {
+        return lastTradeTime;
+    }
+
+    public Stock setLastTradeTime(String lastTradeTime) {
+        this.lastTradeTime = lastTradeTime;
+        return this;
     }
 }
