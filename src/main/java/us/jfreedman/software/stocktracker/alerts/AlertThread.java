@@ -3,14 +3,12 @@ package us.jfreedman.software.stocktracker.alerts;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by Joshua on 12/12/2015.
- */
 public class AlertThread implements Runnable {
 
     private static AlertThread instance;
 
-    private BlockingQueue<Alert> registeredAlerts;
+    private final BlockingQueue<Alert> registeredAlerts;
+    private boolean running = true;
 
     private AlertThread() {
         registeredAlerts = new LinkedBlockingQueue<>();
@@ -22,19 +20,22 @@ public class AlertThread implements Runnable {
         return instance;
     }
 
-    public void registerAlert(Alert alert) {
+    public synchronized void registerAlert(Alert alert) {
         registeredAlerts.add(alert);
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (running) {
             try {
                 registeredAlerts.forEach(Alert::check);
             } catch (Exception e) {
                 e.printStackTrace();
-//                break;
             }
         }
+    }
+
+    public synchronized void interrupt() {
+        running = false;
     }
 }
