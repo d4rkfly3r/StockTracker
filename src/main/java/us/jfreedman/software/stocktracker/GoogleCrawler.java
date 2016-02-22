@@ -39,7 +39,7 @@ public class GoogleCrawler {
     public Set<String> getDataFromGoogle(String query) {
 
         Set<String> result = new HashSet<String>();
-        String request = "https://www.google.com/search?q=" + query + "&num=300";
+        String request = "https://www.google.com/search?q=" + query + "&num=100";
         System.out.println("Sending request..." + request);
 
         try {
@@ -61,7 +61,7 @@ public class GoogleCrawler {
                     if (temp.substring("/url?q=".length()).startsWith("http://webcache.googleusercontent.com/search?q=cache:")) {
                         String newUrl = URLDecoder.decode(temp.substring("/url?q=http://webcache.googleusercontent.com/search?q=cache:".length()), "UTF-8");
                         newUrl = newUrl.substring(newUrl.indexOf(':') + 1, newUrl.lastIndexOf("+" + query));
-                        result.add(URLDecoder.decode(newUrl, "UTF-8"));
+                        result.add(URLDecoder.decode(newUrl, "UTF-8").replace(" ", "%20"));
                     } else {
                         result.add(temp.substring("/url?q=".length(), temp.indexOf("&sa=U")));//, temp.indexOf("&sa=U")));
                     }
