@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Set;
 
 class MainClass {
+    public static final int RESULT_LEN = 30;
     int totalNeutral = 0;
     int totalPro = 0;
     int totalCon = 0;
@@ -16,10 +17,11 @@ class MainClass {
         GoogleCrawler googleCrawler = new GoogleCrawler();
 
         getResult(googleCrawler.getDataFromGoogle("GOOG"));
-        getResult(googleCrawler.getDataFromGoogle("TSLA"));
+        getResult(googleCrawler.getDataFromGoogle("LL"));
     }
 
     private void getResult(Set<String> result) {
+
         result.forEach(s -> {
             Crawler crawler = new Crawler(s);
             try {
@@ -67,7 +69,9 @@ class MainClass {
             con += getCount(crawler.getRetData(), "lower");
             con += getCount(crawler.getRetData(), "slump");
             con += getCount(crawler.getRetData(), "fell"); // 418 | 231 |
-            System.out.print(neutral + " | " + pro + " | " + con + " | ");
+            System.out.print("\r" + neutral + " | " + pro + " | " + con + " | " + crawler.getUrl());
+            System.out.flush();
+//            System.out.print("\r");
             totalNeutral += neutral;
             totalPro += pro;
             totalCon += con;
@@ -78,6 +82,9 @@ class MainClass {
         System.out.println("Stat: [ " + totalNeutral + " | " + totalPro + " | " + totalCon + " ]");
         System.out.println("Dif: " + Math.abs(totalPro - totalCon));
         System.out.println("Result Size: " + result.size());
+        System.out.println();
+        System.out.println();
+        System.out.println();
         System.out.println();
     }
 

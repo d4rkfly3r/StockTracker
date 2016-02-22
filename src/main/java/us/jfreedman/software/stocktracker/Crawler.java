@@ -9,8 +9,8 @@ import org.jsoup.nodes.Document;
  */
 public class Crawler {
 
-    String url;
-    String retData = "";
+    private String url;
+    private String retData = "";
 
     public Crawler(String url) {
         this.url = url;

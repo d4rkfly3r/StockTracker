@@ -39,7 +39,7 @@ public class GoogleCrawler {
     public Set<String> getDataFromGoogle(String query) {
 
         Set<String> result = new HashSet<String>();
-        String request = "https://www.google.com/search?q=" + query + "&num=100";
+        String request = "https://www.google.com/search?q=" + query + "&num=" + MainClass.RESULT_LEN;
         System.out.println("Sending request..." + request);
 
         try {
